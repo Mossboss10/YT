@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>YouTube Vid Player with Piped Embed</title>
+  <title>YouTube Nocookie Embed (Unblocker Attempt)</title>
   <style>
     body {
       background: #f6f8fa;
@@ -11,7 +11,7 @@
       margin: 0;
       padding: 0;
     }
-    .fullFrame {
+    .container {
       max-width: 400px;
       margin: 60px auto;
       background: #fff;
@@ -19,9 +19,6 @@
       border-radius: 9px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.08);
       text-align: center;
-    }
-    form {
-      margin-bottom: 20px;
     }
     input[type="text"] {
       width: 70%;
@@ -32,7 +29,7 @@
       margin-right: 8px;
       outline: none;
     }
-    input[type="submit"], button {
+    button {
       padding: 10px 20px;
       font-size: 1em;
       border: none;
@@ -42,51 +39,38 @@
       cursor: pointer;
       margin-top: 12px;
     }
-    input[type="submit"]:hover, button:hover {
+    button:hover {
       background: #0056b3;
     }
-    #holder {
+    #player {
       margin-top: 24px;
     }
-    #spc {
+    iframe {
       width: 360px;
       height: 215px;
       border-radius: 8px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-    }
-    .note {
-      margin-top: 18px;
-      color: #666;
-      font-size: 0.98em;
+      border: none;
     }
   </style>
 </head>
 <body>
-  <div class="fullFrame">
-    <form id="idform">
-      <input type="text" id="id_input" placeholder="YouTube video id" />
-      <input type="submit" value="Watch with Piped" />
-    </form>
-    <div id="holder"></div>
-    <div class="note">
-      Powered by <a href="https://piped.video" target="_blank">Piped</a>. May not work if Piped is blocked on your network.
-    </div>
+  <div class="container">
+    <h2>YouTube Video Watcher<br><span style="font-size:0.7em;font-weight:normal">(*nocookie embed*)</span></h2>
+    <input type="text" id="ytid" placeholder="Enter YouTube Video ID" />
+    <button onclick="loadVideo()">Watch</button>
+    <div id="player"></div>
   </div>
   <script>
-    const container = document.querySelector("#holder");
-    const form = document.querySelector("#idform");
-    const id = document.querySelector("#id_input");
-
-    form.addEventListener("submit", e => {
-      e.preventDefault();
-      let id_num = id.value.trim();
-      container.innerHTML = "";
-      if (!id_num) return;
-
-      // Use Piped to embed the video
-      const pipedUrl = `https://piped.video/embed/${id_num}`;
-      container.innerHTML = `<iframe id="spc" src="${pipedUrl}" frameborder="0" allowfullscreen></iframe>`;
-    });
+    function loadVideo() {
+      const ytid = document.getElementById('ytid').value.trim();
+      const playerDiv = document.getElementById('player');
+      if (!ytid) {
+        playerDiv.innerHTML = '';
+        return;
+      }
+      playerDiv.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${ytid}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+    }
   </script>
 </body>
 </html>
