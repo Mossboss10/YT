@@ -1,81 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>YouTube Vid Player</title>
-    <style>
-      body {
-        background: #f6f8fa;
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-      }
-      .fullFrame {
-        max-width: 400px;
-        margin: 60px auto;
-        background: #fff;
-        padding: 32px 24px 24px 24px;
-        border-radius: 9px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        text-align: center;
-      }
-      form {
-        margin-bottom: 20px;
-      }
-      input[type="text"] {
-        width: 70%;
-        padding: 10px;
-        font-size: 1em;
-        border: 1px solid #bbb;
-        border-radius: 5px;
-        margin-right: 8px;
-        outline: none;
-      }
-      input[type="submit"] {
-        padding: 10px 20px;
-        font-size: 1em;
-        border: none;
-        background: #007bff;
-        color: #fff;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background 0.2s;
-      }
-      input[type="submit"]:hover {
-        background: #0056b3;
-      }
-      #holder {
-        margin-top: 24px;
-      }
-      #spc {
-        width: 360px;
-        height: 215px;
-        border-radius: 8px;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-      }
-    </style>
-  </head>
-  <body>
-    <div class="fullFrame">
-      <form action="" id="idform">
-        <input type="text" id="id_input" placeholder="YouTube video id" />
-        <input type="submit" value="watch" />
-      </form>
-      <div id="holder"></div>
-    </div>
-    <script>
-      const container = document.querySelector("#holder");
-      const form = document.querySelector("#idform");
-      const id = document.querySelector("#id_input");
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YouTube Vid Player with Archive Fallback</title>
+  <style>
+    body {
+      background: #f6f8fa;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .fullFrame {
+      max-width: 400px;
+      margin: 60px auto;
+      background: #fff;
+      padding: 32px 24px 24px 24px;
+      border-radius: 9px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+    form {
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      width: 70%;
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #bbb;
+      border-radius: 5px;
+      margin-right: 8px;
+      outline: none;
+    }
+    input[type="submit"], button {
+      padding: 10px 20px;
+      font-size: 1em;
+      border: none;
+      background: #007bff;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+    input[type="submit"]:hover, button:hover {
+      background: #0056b3;
+    }
+    #holder {
+      margin-top: 24px;
+    }
+    #spc {
+      width: 360px;
+      height: 215px;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+  </style>
+</head>
+<body>
+  <div class="fullFrame">
+    <form id="idform">
+      <input type="text" id="id_input" placeholder="YouTube video id" />
+      <input type="submit" value="Watch via Archive" />
+    </form>
+    <div id="holder"></div>
+  </div>
+  <script>
+    const container = document.querySelector("#holder");
+    const form = document.querySelector("#idform");
+    const id = document.querySelector("#id_input");
 
-      form.addEventListener("submit", e => {
-        e.preventDefault();
-        let id_num = id.value;
-        container.innerHTML = "";
-        container.innerHTML += `<iframe id="spc" src="https://www.youtube.com/embed/${id_num}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-      });
-    </script>
-  </body>
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      let id_num = id.value.trim();
+      container.innerHTML = "";
+      if (!id_num) return;
+
+      // Try to load the Wayback Machine snapshot
+      const archiveUrl = `https://web.archive.org/web/https://www.youtube.com/watch?v=${id_num}`;
+      container.innerHTML = `<iframe id="spc" src="${archiveUrl}" frameborder="0" allowfullscreen></iframe>
+        <br>
+        <button id="ytEmbed">Try direct YouTube embed</button>`;
+
+      document.getElementById("ytEmbed").onclick = function() {
+        container.innerHTML = `<iframe id="spc" src="https://www.youtube.com/embed/${id_num}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+      };
+    });
+  </script>
+</body>
 </html>
