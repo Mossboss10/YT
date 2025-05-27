@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Embed Video by Link</title>
+    <style>
+        body {
+            background: #f6f8fa;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 60px auto;
+            background: #fff;
+            padding: 32px 24px 24px 24px;
+            border-radius: 9px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 24px;
+            color: #222;
+        }
+        form {
+            margin-bottom: 24px;
+        }
+        input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #bbb;
+            border-radius: 5px;
+            margin-right: 8px;
+            outline: none;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            background: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        #videoContainer {
+            margin-top: 24px;
+        }
+        .note {
+            margin-top: 36px;
+            color: #777;
+            font-size: 0.95em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Embed a Video</h1>
+        <form id="videoForm">
+            <input type="text" id="videoLink" placeholder="Insert link here" required>
+            <button type="submit">Embed Video</button>
+        </form>
+        <div id="videoContainer"></div>
+        <div class="note">
+            <p>Works for YouTube and Vimeo links.<br>Other sites may not be embeddable.</p>
+        </div>
+    </div>
+    <script>
+        document.getElementById('videoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const link = document.getElementById('videoLink').value.trim();
+            const container = document.getElementById('videoContainer');
+            container.innerHTML = '';
+
+            let embedHtml = '';
+
+            // YouTube
+            const ytMatch = link.match(
+                /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/
+            );
+            if (ytMatch) {
+                const videoId = ytMatch[1];
+                embedHtml = `<iframe width="420" height="315" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+            }
+
+            // Vimeo
+            const vimeoMatch = link.match(
+                /(?:https?:\/\/)?(?:www\.)?vimeo\.com\/(\d+)/
+            );
+            if (vimeoMatch) {
+                const videoId = vimeoMatch[1];
+                embedHtml = `<iframe src="https://player.vimeo.com/video/${videoId}" width="420" height="315" frameborder="0" allowfullscreen></iframe>`;
+            }
+
+            // More platforms can be added here
+
+            if (embedHtml) {
+                container.innerHTML = embedHtml;
+            } else {
+                container.innerHTML = `<p style="color:red;">Sorry, this link cannot be embedded.<br>Try a YouTube or Vimeo link.</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
