@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>YouTube Vid Player with Archive Fallback</title>
+  <title>YouTube Vid Player with Piped Embed</title>
   <style>
     body {
       background: #f6f8fa;
@@ -54,15 +54,23 @@
       border-radius: 8px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.06);
     }
+    .note {
+      margin-top: 18px;
+      color: #666;
+      font-size: 0.98em;
+    }
   </style>
 </head>
 <body>
   <div class="fullFrame">
     <form id="idform">
       <input type="text" id="id_input" placeholder="YouTube video id" />
-      <input type="submit" value="Watch via Archive" />
+      <input type="submit" value="Watch with Piped" />
     </form>
     <div id="holder"></div>
+    <div class="note">
+      Powered by <a href="https://piped.video" target="_blank">Piped</a>. May not work if Piped is blocked on your network.
+    </div>
   </div>
   <script>
     const container = document.querySelector("#holder");
@@ -75,15 +83,9 @@
       container.innerHTML = "";
       if (!id_num) return;
 
-      // Try to load the Wayback Machine snapshot
-      const archiveUrl = `https://web.archive.org/web/https://www.youtube.com/watch?v=${id_num}`;
-      container.innerHTML = `<iframe id="spc" src="${archiveUrl}" frameborder="0" allowfullscreen></iframe>
-        <br>
-        <button id="ytEmbed">Try direct YouTube embed</button>`;
-
-      document.getElementById("ytEmbed").onclick = function() {
-        container.innerHTML = `<iframe id="spc" src="https://www.youtube.com/embed/${id_num}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-      };
+      // Use Piped to embed the video
+      const pipedUrl = `https://piped.video/embed/${id_num}`;
+      container.innerHTML = `<iframe id="spc" src="${pipedUrl}" frameborder="0" allowfullscreen></iframe>`;
     });
   </script>
 </body>
